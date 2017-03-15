@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class FeedditApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(FeedditApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(FeedditApplication.class, args);
+    }
 }
