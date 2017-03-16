@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login Form</title>
+    <th:block th:include="fragments/headerincludes :: head"></th:block>
+</head>
+<body>
+<div class="container">
+    <th:block th:include="fragments/header :: header"></th:block>
+    <div th:if="${param.error}">
+        <label>Invalid username and password.</label>
+    </div>
+    <div th:if="${param.logout}">
+        <label>
+            You have been logged out.
+        </label>
+    </div>
+
+    <div class="container col-md-3 col-centered">
+        <div class="card card-container">
+            <p id="profile-name" class="profile-name-card"></p>
+            <form class="form-signin" th:action="@{/login}" method="POST">
+                <input type="text" name="username" class="form-control" placeholder="Username" required="required" autofocus="autofocus"/>
+                <input type="password" name="password" class="form-control" placeholder="Password" required="required"/>
+                <div id="remember" class="checkbox">
+                    <label>
+                        <input type="checkbox" value="remember-me"/> Remember me
+                    </label>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in</button>
+            </form><!-- /form -->
+            <a href="#" class="forgot-password">
+                Forgot the password?
+            </a>
+        </div><!-- /card-container -->
+    </div>
+</div>
+</body>
+</html>

@@ -1,16 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head lang="en">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.4/css/bootstrap.min.css"
-          th:href="@{/webjars/bootstrap/3.3.4/css/bootstrap.min.css}"
-          rel="stylesheet" media="screen"/>
-
-    <script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"
-            th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
-
-    <link href="../../static/css/style.css"
-          th:href="@{css/style.css}" rel="stylesheet" media="screen"/>
+    <meta charset="UTF-8"/>
 </head>
 <body>
 
@@ -21,25 +12,33 @@
                 <div class="navbar-header">
                     <a class="navbar-brand" href="#" th:href="@{/}">Home</a>
                     <ul class="nav navbar-nav">
-                        <li><a href="#" th:href="@{/products}">Products</a></li>
-                        <li><a href="#" th:href="@{/product/new}">Create Product</a></li>
+                        <li><a href="#" th:href="@{/posts}">Posts</a></li>
+                        <li><a href="#" th:href="@{/post/new}" sec:authorize="isAuthenticated()">Create Post</a></li>
+                        <li sec:authorize="isAnonymous()"><a href="#" th:href="@{/login}">Sign in</a></li>
                     </ul>
-
                 </div>
+                <ul sec:authorize="isAuthenticated()" class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-user"></span> 
+                            <strong sec:authentication="name"></strong>
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                        </a>
+                        <ul class="dropdown-menu text-center">
+                            <li>
+                                <a href="#" class="text-center" th:href="@{/logout}">Logout</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </nav>
 
         <div class="jumbotron">
             <div class="row text-center">
                 <div class="">
-                    <h2>Spring Framework Guru</h2>
-
-                    <h3>Spring Boot Web App</h3>
+                    <h2>feeddit</h2>
                 </div>
-            </div>
-            <div class="row text-center">
-                <img src="../../static/images/NewBannerBOOTS_2.png" width="400"
-                     th:src="@{/images/NewBannerBOOTS_2.png}"/>
             </div>
         </div>
     </div>

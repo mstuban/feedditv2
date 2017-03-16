@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>feeddit</title>
+
+    <th:block th:include="fragments/headerincludes :: head"></th:block>
+</head>
+<body>
+<div class="container">
+    <th:block th:include="fragments/header :: header"></th:block>
+
+    <h2>Post Details</h2>
+    <div>
+        <form class="form-horizontal" th:object="${post}" th:action="@{/post}" method="post">
+            <input type="hidden" th:field="*{id}"/>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Date submitted:</label>
+                <div class="col-sm-10">
+                    <input type="date" class="form-control" th:field="*{submitDate}"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Author ID:</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" th:field="*{authorID}"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Headline:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:field="*{headline}"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Post Url:</label>
+                <div class="col-sm-10">
+                    <input type="url" class="form-control" th:field="*{postURL}"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Author name:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" th:field="*{authorName}"/>
+                </div>
+            </div>
+            <input type="number" class="form-control" value="0" th:field="*{numberOfUpvotes}"/>
+            <div class="row">
+                <button type="submit" class="btn btn-default">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
