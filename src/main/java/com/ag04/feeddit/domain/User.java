@@ -2,7 +2,9 @@ package com.ag04.feeddit.domain;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by jt on 12/14/15.
@@ -10,7 +12,7 @@ import java.util.List;
 @Entity
 public class User {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String username;
@@ -21,16 +23,13 @@ public class User {
     private String encryptedPassword;
     private Boolean enabled = true;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable
-    // ~ defaults to @JoinTable(name = "USER_ROLE", joinColumns = @JoinColumn(name = "user_id"),
-    //     inverseJoinColumns = @joinColumn(name = "role_id"))
+    @ElementCollection(targetClass = Role.class)
     private List<Role> roles = new ArrayList<>();
+
     private Integer failedLoginAttempts = 0;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable
-    private List<Post> posts = new ArrayList<>();
+    @ElementCollection(targetClass = Post.class)
+    private Set<Post> posts = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -72,28 +71,13 @@ public class User {
         this.enabled = enabled;
     }
 
-
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
     public List<Role> getRoles() {
         return roles;
     }
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
-    }
-
-    public void addRole(Role role) {
-        if (!this.roles.contains(role)) {
-            this.roles.add(role);
-        }
-
-        if (!role.getUsers().contains(this)) {
-            role.getUsers().add(this);
-        }
-    }
-
-    public void removeRole(Role role) {
-        this.roles.remove(role);
-        role.getUsers().remove(this);
     }
 
     public Integer getFailedLoginAttempts() {
@@ -104,11 +88,14 @@ public class User {
         this.failedLoginAttempts = failedLoginAttempts;
     }
 
-    public List<Post> getPosts() {
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+    public Set<Post> getPosts() {
         return posts;
     }
 
-    public void setPosts(List<Post> posts) {
+    public void setPosts(Set<Post> posts) {
         this.posts = posts;
     }
+
+
 }

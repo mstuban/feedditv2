@@ -3,14 +3,12 @@ package com.ag04.feeddit.domain;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class Post {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -22,10 +20,6 @@ public class Post {
     private String postURL;
     private String authorName;
     private Integer numberOfUpvotes;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable
-    List<User> users = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -43,6 +37,8 @@ public class Post {
         this.submitDate = submitDate;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false)
     public Long getAuthorID() {
         return authorID;
     }
@@ -83,11 +79,4 @@ public class Post {
         this.numberOfUpvotes = numberOfUpvotes;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
 }
