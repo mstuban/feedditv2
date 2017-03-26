@@ -7,27 +7,36 @@
 <body>
 <div class="container">
     <th:block th:include="fragments/header :: header"></th:block>
-    <div th:if="${param.error}">
-        <label>Invalid username and password.</label>
-    </div>
-    <div th:if="${param.logout}">
-        <label>
-            You have been logged out.
-        </label>
-    </div>
-
     <div class="container col-md-3 col-centered">
         <div class="card card-container">
             <p id="profile-name" class="profile-name-card"></p>
-            <form class="form-signin" th:action="@{/login}" method="POST">
-                <input type="text" name="username" class="form-control" placeholder="Username" required="required" autofocus="autofocus"/>
-                <input type="password" name="password" class="form-control" placeholder="Password" required="required"/>
-                <div id="remember" class="checkbox">
-                    <label>
-                        <input type="checkbox" value="remember-me"/> Remember me
-                    </label>
+            <form th:action="@{/login}" method="post"> 
+                <div class="form-group">
+                       <input class="form-control" type="text" name="username" placeholder="Username"/>
                 </div>
-                <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in</button>
+                  
+                <div class="form-group">
+                       <input class="form-control" type="password" name="password" placeholder="Password"/> 
+                </div>
+                  
+                <div class="form-group">
+                       <input class="btn btn-info center-block" type="submit" value="Sign In"/>
+                      
+                </div>
+                  
+                <span th:if="${param.error}">
+                    <div class="alert-danger">Invalid username and password.</div>
+                </span>
+                  
+                <span th:if="${param.logout}">
+                       
+                    <div class="alert-normal">You have been logged out.</div>
+                      
+                </span>
+                 
+                  <input type="hidden" name="${_csrf.parameterName}"
+                         value="${_csrf.token}"/>
+                 
             </form><!-- /form -->
             <a href="#" class="forgot-password">
                 Forgot the password?

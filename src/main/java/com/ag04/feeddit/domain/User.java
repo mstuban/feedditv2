@@ -1,50 +1,53 @@
 package com.ag04.feeddit.domain;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.io.Serializable;
 import java.util.Set;
+import javax.persistence.*;
 
-/**
- * Created by jt on 12/14/15.
- */
 @Entity
-public class User {
+@Table(name = "users")
+public class User implements Serializable {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "userid", nullable = false)
+    private Long userId;
 
-    private String username;
+    @Column(name = "username")
+    private String userName;
 
-    @Transient
+    @Column(name = "password")
     private String password;
 
-    private String encryptedPassword;
-    private Boolean enabled = true;
+    @Column(name = "email")
+    private String email;
 
-    @ElementCollection(targetClass = Role.class)
-    private List<Role> roles = new ArrayList<>();
+    @Column(name = "enabled")
+    private int enabled;
 
-    private Integer failedLoginAttempts = 0;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private Set<Post> posts;
 
-    @ElementCollection(targetClass = Post.class)
-    private Set<Post> posts = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private Set<UserRole> roles;
 
-    public Long getId() {
-        return id;
+    public User() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public User(User user) {
+        this.userId = user.userId;
+        this.userName = user.userName;
+        this.email = user.email;
+        this.password = user.password;
+        this.enabled = user.enabled;
     }
 
-    public String getUsername() {
-        return username;
+    public int getEnabled() {
+        return enabled;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEnabled(int enabled) {
+        this.enabled = enabled;
     }
 
     public String getPassword() {
@@ -55,47 +58,43 @@ public class User {
         this.password = password;
     }
 
-    public String getEncryptedPassword() {
-        return encryptedPassword;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEncryptedPassword(String encryptedPassword) {
-        this.encryptedPassword = encryptedPassword;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-
-    public Integer getFailedLoginAttempts() {
-        return failedLoginAttempts;
-    }
-
-    public void setFailedLoginAttempts(Integer failedLoginAttempts) {
-        this.failedLoginAttempts = failedLoginAttempts;
-    }
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
     public Set<Post> getPosts() {
-        return posts;
+        return this.posts;
     }
 
     public void setPosts(Set<Post> posts) {
         this.posts = posts;
     }
 
+    public Set<UserRole> getRoles() {
+        return roles;
+    }
 
+    public void setRoles(Set<UserRole> roles) {
+        this.roles = roles;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 }

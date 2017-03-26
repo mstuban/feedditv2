@@ -6,20 +6,28 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
+@Table(name = "posts")
 public class Post {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "post_id", nullable = false)
     private Long id;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date submitDate;
 
-
+    @Column(name = "author_id")
     private Long authorID;
+
     private String headline;
     private String postURL;
     private String authorName;
     private Integer numberOfUpvotes;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userid")
+    private User user;
 
     public Long getId() {
         return id;
@@ -37,10 +45,8 @@ public class Post {
         this.submitDate = submitDate;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", nullable = false)
-    public Long getAuthorID() {
-        return authorID;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setAuthorID(Long authorID) {
@@ -79,4 +85,11 @@ public class Post {
         this.numberOfUpvotes = numberOfUpvotes;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public Long getAuthorID() {
+        return authorID;
+    }
 }
