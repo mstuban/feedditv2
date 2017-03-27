@@ -1,16 +1,22 @@
 package com.ag04.feeddit.controllers;
 
 import com.ag04.feeddit.domain.Post;
+import com.ag04.feeddit.domain.User;
 import com.ag04.feeddit.services.PostService;
+import com.ag04.feeddit.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by marko on 15.03.17..
@@ -21,6 +27,9 @@ public class PostController {
 
     @Autowired
     PostService postService;
+
+    @Autowired
+    UserService userService;
 
 
     @RequestMapping("post/{id}")
@@ -53,7 +62,15 @@ public class PostController {
 
     @RequestMapping(value = "post", method = RequestMethod.POST)
     public String savePost(Post post) {
+        UserDetails userDetails =
+                (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByUsername(userDetails.getUsername());
+        Set<Post> posts = user.getPosts();
+        posts.add(post);
+        user.setPosts(posts);
+        post.setUser(user);
         postService.savePost(post);
+        userService.saveOrUpdate(user);
         return "redirect:/post/" + post.getId();
     }
 
@@ -61,6 +78,17 @@ public class PostController {
     public String deletePost(@PathVariable Long id) {
         postService.deletePost(id);
         return "redirect:/posts";
+    }
+
+    @RequestMapping("/myPosts")
+    public String getMyPosts(Model model) {
+        UserDetails userDetails =
+                (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByUsername(userDetails.getUsername());
+        List<Post> userPosts = new ArrayList<>();
+        userPosts.addAll(user.getPosts());
+        model.addAttribute("userPosts", userPosts);
+        return "myposts";
     }
 
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head lang="en">
 
     <title>feeddit</title>
@@ -10,7 +10,7 @@
 <div class="container">
     <th:block th:include="fragments/header :: header"></th:block>
 
-    <h2>Post Details</h2>
+    <h2>Create a new post</h2>
     <div>
         <form class="form-horizontal" th:object="${post}" th:action="@{/post}" method="post">
             <input type="hidden" th:field="*{id}"/>
@@ -18,12 +18,6 @@
                 <label class="col-sm-2 control-label">Date submitted:</label>
                 <div class="col-sm-10">
                     <input type="date" class="form-control" th:field="*{submitDate}"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Author ID:</label>
-                <div class="col-sm-10">
-                    <input type="number" class="form-control" th:field="*{authorID}"/>
                 </div>
             </div>
             <div class="form-group">
@@ -44,7 +38,6 @@
                     <input type="text" class="form-control" th:field="*{authorName}"/>
                 </div>
             </div>
-            <input type="hidden" class="form-control" value="0" th:field="*{numberOfUpvotes}"/>
             <div class="row">
                 <button type="submit" class="btn btn-default">Submit</button>
             </div>

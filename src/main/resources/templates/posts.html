@@ -7,25 +7,24 @@
 <div class="container">
     <th:block th:include="fragments/header :: header"></th:block>
     <div th:if="${not #lists.isEmpty(listOfPosts)}">
-        <h2>Post List</h2>
+        <h2>Posts</h2>
         <table class="table table-striped">
             <tr>
-                <th>Id</th>
-                <th>Headline</th>
-                <th>Post URL</th>
-                <th>Number Of Upvotes</th>
-                <th>View</th>
-                <th>Edit</th>
-                <th>Delete</th>
+
             </tr>
-            <tr th:each="post : ${listOfPosts}">
-                <td th:text="${post.id}"><a href="/post/${post.id}">Id</a></td>
-                <td th:text="${post.headline}">Post Id</td>
-                <td th:text="${post.postURL}">descirption</td>
-                <td th:text="${post.numberOfUpvotes}">price</td>
-                <td><a th:href="${ '/post/' + post.id}">View</a></td>
-                <td><a th:href="${'/post/edit/' + post.id}">Edit</a></td>
-                <td><a th:href="${'/post/delete/' + post.id}">Delete</a></td>
+
+            <tr th:each="post : ${listOfPosts}" class="text-center">
+                <td th:text="${post.numberOfUpvotes}"></td>
+                <td>
+                    <a th:href="${post.postURL}"><h3 th:text="${post.headline}"></h3></a>
+                    <span th:text="${post.authorName}">
+                    </span>
+                </td>
+                <td>
+                    <button th:onclick="'javascript:upVote(\'' + ${post.id} + '\');'"
+                            class="glyphicon glyphicon-hand-up"></button>
+                    <button class="glyphicon glyphicon-hand-down"></button>
+                </td>
             </tr>
         </table>
 

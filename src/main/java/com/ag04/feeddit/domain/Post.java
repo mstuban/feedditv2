@@ -17,13 +17,11 @@ public class Post {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date submitDate;
 
-    @Column(name = "author_id")
-    private Long authorID;
-
     private String headline;
     private String postURL;
     private String authorName;
-    private Integer numberOfUpvotes;
+
+    private Integer numberOfUpvotes = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userid")
@@ -49,9 +47,11 @@ public class Post {
         this.user = user;
     }
 
+/*
     public void setAuthorID(Long authorID) {
         this.authorID = authorID;
     }
+*/
 
     public String getHeadline() {
         return headline;
@@ -89,7 +89,9 @@ public class Post {
         return user;
     }
 
+/*
     public Long getAuthorID() {
         return authorID;
     }
+*/
 }

@@ -1,6 +1,7 @@
 package com.ag04.feeddit.domain;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 
@@ -30,6 +31,12 @@ public class User implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private Set<UserRole> roles;
+
+    @ElementCollection(targetClass = Long.class)
+    private Set<Long> upvotedPostsIds;
+
+    @ElementCollection(targetClass = Long.class)
+    private Set<Long> downvotedPostsIds;
 
     public User() {
     }
@@ -96,5 +103,21 @@ public class User implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Set<Long> getUpvotedPostsIds() {
+        return upvotedPostsIds;
+    }
+
+    public void setUpvotedPostsIds(Set<Long> upvotedPostsIds) {
+        this.upvotedPostsIds = upvotedPostsIds;
+    }
+
+    public Set<Long> getDownvotedPostsIds() {
+        return downvotedPostsIds;
+    }
+
+    public void setDownvotedPostsIds(Set<Long> downvotedPostsIds) {
+        this.downvotedPostsIds = downvotedPostsIds;
     }
 }

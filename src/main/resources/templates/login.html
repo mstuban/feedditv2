@@ -10,37 +10,37 @@
     <div class="container col-md-3 col-centered">
         <div class="card card-container">
             <p id="profile-name" class="profile-name-card"></p>
+
+            <span th:if="${param.error}" class="center-block text-center alert alert-danger">
+                Invalid username and password.
+            </span>
+              
+            <span th:if="${param.logout}" class="center-block text-center alert alert-success">
+                You have been logged out.
+            </span>
+
             <form th:action="@{/login}" method="post"> 
                 <div class="form-group">
-                       <input class="form-control" type="text" name="username" placeholder="Username"/>
+                    <label for="username">Username:</label>
+                       <input class="form-control" type="text" id="username" name="username" placeholder="Username"
+                              required="required"/>
                 </div>
                   
                 <div class="form-group">
-                       <input class="form-control" type="password" name="password" placeholder="Password"/> 
+                    <label for="password">Password:</label>
+                       <input class="form-control" type="password" id="password" name="password"
+                              placeholder="Password" required="required"/> 
                 </div>
                   
                 <div class="form-group">
                        <input class="btn btn-info center-block" type="submit" value="Sign In"/>
                       
                 </div>
-                  
-                <span th:if="${param.error}">
-                    <div class="alert-danger">Invalid username and password.</div>
-                </span>
-                  
-                <span th:if="${param.logout}">
-                       
-                    <div class="alert-normal">You have been logged out.</div>
-                      
-                </span>
                  
                   <input type="hidden" name="${_csrf.parameterName}"
                          value="${_csrf.token}"/>
                  
             </form><!-- /form -->
-            <a href="#" class="forgot-password">
-                Forgot the password?
-            </a>
         </div><!-- /card-container -->
     </div>
 </div>

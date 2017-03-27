@@ -10,9 +10,9 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#" th:href="@{/}">Home</a>
                     <ul class="nav navbar-nav">
                         <li><a href="#" th:href="@{/posts}">Posts</a></li>
+                        <li><a href="#" th:href="@{/myPosts}" sec:authorize="isAuthenticated()">My posts</a></li>
                         <li><a href="#" th:href="@{/post/new}" sec:authorize="isAuthenticated()">Create Post</a></li>
                         <li sec:authorize="isAnonymous()"><a href="#" th:href="@{/login}">Sign in</a></li>
                     </ul>
