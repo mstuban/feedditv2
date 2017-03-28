@@ -6,24 +6,27 @@
 <body>
 <div class="container">
     <th:block th:include="fragments/header :: header"></th:block>
-    <div th:if="${not #lists.isEmpty(listOfPosts)}">
-        <h2>Posts</h2>
+    <span th:if="${#lists.isEmpty(listOfPosts)}" class="center-block text-center alert alert-info">
+        No posts added yet!
+    </span>
+    <div class="container" th:if="${not #lists.isEmpty(listOfPosts)}">
         <table class="table table-striped">
             <tr>
 
             </tr>
 
             <tr th:each="post : ${listOfPosts}" class="text-center">
-                <td th:text="${post.numberOfUpvotes}"></td>
-                <td>
+                <td class="text-center" th:text="${post.numberOfUpvotes}"></td>
+                <td class="text-center">
                     <a th:href="${post.postURL}"><h3 th:text="${post.headline}"></h3></a>
                     <span th:text="${post.authorName}">
                     </span>
                 </td>
-                <td>
-                    <button th:onclick="'javascript:upVote(\'' + ${post.id} + '\');'"
-                            class="glyphicon glyphicon-hand-up"></button>
-                    <button class="glyphicon glyphicon-hand-down"></button>
+                <td class="text-center">
+                    <a id="upvoteLink" th:href="@{/post/{id}/upVote(id=${post.id})}"
+                       class="glyphicon glyphicon-hand-up"></a>
+                    <a id="downvoteLink" th:href="@{/post/{id}/downVote(id=${post.id})}"
+                       class="glyphicon glyphicon-hand-down"></a>
                 </td>
             </tr>
         </table>

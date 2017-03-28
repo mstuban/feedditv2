@@ -2,46 +2,56 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head lang="en">
 
-    <title>feeddit</title>
+    <title>Create post</title>
 
     <th:block th:include="fragments/headerincludes :: head"></th:block>
 </head>
 <body>
-<div class="container">
+<div class="container text-center">
     <th:block th:include="fragments/header :: header"></th:block>
 
     <h2>Create a new post</h2>
-    <div>
-        <form class="form-horizontal" th:object="${post}" th:action="@{/post}" method="post">
-            <input type="hidden" th:field="*{id}"/>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Date submitted:</label>
-                <div class="col-sm-10">
-                    <input type="date" class="form-control" th:field="*{submitDate}"/>
+    <hr/>
+    <div class="row text-center">
+        <div class="col-md-6 col-md-offset-3">
+            <form class="form-horizontal" th:object="${post}" th:action="@{/post}" method="post">
+                <input type="hidden" th:field="*{id}"/>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Upvote #:</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" th:field="*{numberOfUpvotes}" readonly="readonly"
+                               disabled="disabled"/>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Headline:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" th:field="*{headline}"/>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">By user:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" th:value="${currentUserUsername}" disabled="disabled"/>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Post Url:</label>
-                <div class="col-sm-10">
-                    <input type="url" class="form-control" th:field="*{postURL}"/>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Headline:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" th:field="*{headline}" autofocus="autofocus" required="required"/>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Author name:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" th:field="*{authorName}"/>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Post URL:</label>
+                    <div class="col-sm-10">
+                        <input type="url" class="form-control" th:field="*{postURL}" required="required"/>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <button type="submit" class="btn btn-default">Submit</button>
-            </div>
-        </form>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Author name:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" th:field="*{authorName}" required="required"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

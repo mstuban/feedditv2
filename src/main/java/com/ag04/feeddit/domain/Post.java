@@ -15,7 +15,7 @@ public class Post {
     private Long id;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date submitDate;
+    private Date submitDate = new Date();
 
     private String headline;
     private String postURL;
