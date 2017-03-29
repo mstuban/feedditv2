@@ -13,7 +13,7 @@
                     <ul class="nav navbar-nav">
                         <li><a href="#" th:href="@{/posts}"><b>feeddit</b></a></li>
                         <li><a href="#" th:href="@{/myPosts}" sec:authorize="isAuthenticated()">My posts</a></li>
-                        <li><a href="#" th:href="@{/post/new}" sec:authorize="isAuthenticated()">Create Post</a></li>
+                        <li><a href="#" th:href="@{/post/new}" sec:authorize="isAuthenticated()">Create a post</a></li>
                         <li sec:authorize="isAnonymous()"><a href="#" th:href="@{/login}">Sign in</a></li>
                     </ul>
                 </div>
@@ -25,6 +25,9 @@
                             <span class="glyphicon glyphicon-chevron-down"></span>
                         </a>
                         <ul class="dropdown-menu text-center">
+                            <li class="text-center">
+                                <a th:href="@{/myPosts}">My posts</a>
+                            </li>
                             <li>
                                 <form th:action="@{/logout}" method="POST">
                                     <input type="submit" class="btn btn-danger center-block" value="Logout" />

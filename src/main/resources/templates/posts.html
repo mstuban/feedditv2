@@ -4,33 +4,49 @@
     <th:block th:include="fragments/headerincludes :: head"></th:block>
 </head>
 <body>
-<div class="container">
+<div class="container text-center">
     <th:block th:include="fragments/header :: header"></th:block>
     <span th:if="${#lists.isEmpty(listOfPosts)}" class="center-block text-center alert alert-info">
         No posts added yet!
     </span>
-    <div class="container" th:if="${not #lists.isEmpty(listOfPosts)}">
-        <table class="table table-striped">
+    <span id="upvoteAlert" class="center-block text-center alert alert-success">
+                Post successfully upvoted!
+    </span>
+    <span id="downvoteAlert" class="center-block text-center alert alert-success">
+                Post successfully downvoted!
+    </span>
+    <a th:href="@{/post/new}">
+        <button id="postCreationButton" class="btn btn-primary">Create a post</button>
+    </a>
+    <div class="row" th:if="${not #lists.isEmpty(listOfPosts)}">
+        <table id="table" class="display order-column">
+            <thead>
             <tr>
-
+                <th class="text-center">Number of upvotes</th>
+                <th class="text-center">Headline</th>
+                <th class="text-center"></th>
             </tr>
-
-            <tr th:each="post : ${listOfPosts}" class="text-center">
+            </thead>
+            <tr th:each="post, iter : ${listOfPosts}" class="text-center">
                 <td class="text-center" th:text="${post.numberOfUpvotes}"></td>
                 <td class="text-center">
-                    <a th:href="${post.postURL}"><h3 th:text="${post.headline}"></h3></a>
+                    <a th:href="${post.postURL}"><span th:text="${post.headline}"></span></a><br/>
                     <span th:text="${post.authorName}">
                     </span>
                 </td>
                 <td class="text-center">
-                    <a id="upvoteLink" th:href="@{/post/{id}/upVote(id=${post.id})}"
-                       class="glyphicon glyphicon-hand-up"></a>
-                    <a id="downvoteLink" th:href="@{/post/{id}/downVote(id=${post.id})}"
-                       class="glyphicon glyphicon-hand-down"></a>
+                    <a id="upvoteLink" th:href="@{/post/{id}/upVote(id=${post.id})}">
+                        <button th:disabled="${not #lists.isEmpty(upvotesDisabled)} ? (${#lists.contains(upvotesDisabled, post.id)}) : (false)" onclick="upvoteAlertFunction();" th:id="${'upvoteButton' + '__${post.id}__'}"
+                                class="glyphicon glyphicon-hand-up"></button>
+                    </a>
+                    <a id="downvoteLink" th:href="@{/post/{id}/downVote(id=${post.id})}">
+                        <button th:disabled="${not #lists.isEmpty(downvotesDisabled)} ? (${#lists.contains(downvotesDisabled, post.id)}) : (false)"
+                                onclick="downvoteAlertFunction();" th:id="${'downvoteButton' + '__${post.id}__'}"
+                                class="glyphicon glyphicon-hand-down"></button>
+                    </a>
                 </td>
             </tr>
         </table>
-
     </div>
 </div>
 </body>

@@ -3,6 +3,27 @@
     margin: 0 auto;
 }
 
-a:disabled {
-    color: red;
+button:disabled {
+    color: #FF5700;
+}
+
+table {
+    table-layout: fixed;
+}
+
+.glyphicon-hand-up, .glyphicon-hand-down {
+    font-size: 30px;
+}
+
+span#upvoteAlert, span#downvoteAlert {
+    display: none;
+}
+
+#upvoteLink, #downvoteLink {
+    color: inherit;
+}
+
+#upvoteLink:hover
+{
+    text-decoration: none;
 }

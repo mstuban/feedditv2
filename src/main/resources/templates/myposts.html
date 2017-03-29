@@ -4,27 +4,39 @@
     <th:block th:include="fragments/headerincludes :: head"></th:block>
 </head>
 <body>
-<div class="container">
+<div class="container text-center">
     <th:block th:include="fragments/header :: header"></th:block>
+    <span th:if="${numberOfPostsDeleted}" class="center-block text-center alert alert-success">
+        Successfully deleted <span th:text="${numberOfPostsDeleted}"></span> posts!
+    </span>
     <span th:if="${#lists.isEmpty(userPosts)}" class="center-block text-center alert alert-info">
         No posts added yet!
     </span>
-    <div class="container" th:if="${not #lists.isEmpty(userPosts)}">
-        <table class="table table-striped">
-            <tr>
-                <td class="text-center"><a th:href="${'/deletePosts'}">Delete posts</a></td>
-            </tr>
 
-            <tr th:each="post : ${userPosts}">
-                <td class="text-center" th:text="${post.numberOfUpvotes}"></td>
-                <td class="text-center">
-                    <a th:href="${post.postURL}"><h3 th:text="${post.headline}"></h3></a>
-                    <span th:text="${post.authorName}">
+    <div class="row" th:if="${not #lists.isEmpty(userPosts)}">
+        <table id="" class="table table-striped">
+            <form id="form" th:action="@{/deletePosts}" method="POST">
+                <input id="postDeleteButton" class="btn btn-danger" type="submit" value="Delete selected posts"/>
+                <hr/>
+                <thead>
+                <tr>
+                    <th class="text-center">Number of upvotes</th>
+                    <th class="text-center">Headline</th>
+                    <th class="text-center">Delete</th>
+                </tr>
+                </thead>
+                <tr th:each="post : ${userPosts}">
+                    <td class="text-center" th:text="${post.numberOfUpvotes}"></td>
+                    <td class="text-center">
+                        <a th:href="${post.postURL}"><h4 th:text="${post.headline}"></h4></a>
+                        <span th:text="${post.authorName}">
                     </span>
-                </td>
-                <td>
-                </td>
-            </tr>
+                    </td>
+                    <td class="text-center">
+                        <input type="checkbox" name="postIds" th:value="${post.id}"/>
+                    </td>
+                </tr>
+            </form>
         </table>
     </div>
 

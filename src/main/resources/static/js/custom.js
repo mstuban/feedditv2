@@ -2,16 +2,52 @@
  * Created by marko on 27.03.17..
  */
 
-
-addToIdArray = function (id) {
+$(document).ready(function () {
+    // sdataTables configuration
     $(document).ready(function () {
-        window.location = '/post/addToIdArray/' + id;
+        $('#table').DataTable({
+            "aoColumnDefs": [{
+                'bSortable': false,
+                'aTargets': [2]
+            }],
+            "pagingType": "simple_numbers",
+            "order": [[ 0, "desc" ]]
+        });
     });
-};
 
-$('#upvoteLink').click(function (e) {
-    e.preventDefault();
-    console.log("YAYAY");
-    return false;
+    // check if any checkbox is selected
+    var selected = [];
+    $('input:checked').each(function () {
+        selected.push($(this).attr('name'));
+    });
+
+    // if no checkbox is selected, disable delete button
+    if (selected.length == 0) {
+        $("#postDeleteButton").attr("disabled", true);
+    }
+
+    // check again on any change on any checkbox
+    $(":checkbox").change(function () {
+        if (this.checked) {
+            $("#postDeleteButton").attr("disabled", false);
+        }
+        var selected = [];
+        $('input:checked').each(function () {
+            selected.push($(this).attr('name'));
+        });
+
+        if (selected.length == 0) {
+            $("#postDeleteButton").attr("disabled", true);
+        }
+    });
+
+    upvoteAlertFunction = function() {
+        $("#upvoteAlert").css("display", "block");
+
+    }
+
+    downvoteAlertFunction = function() {
+        $("#downvoteAlert").css("display", "block");
+
+    }
 });
-

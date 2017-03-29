@@ -2,6 +2,7 @@ package com.ag04.feeddit.services;
 
 
 import com.ag04.feeddit.domain.User;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,4 +14,5 @@ public interface UserService {
     User getById(Long id);
     User saveOrUpdate(User user);
     void delete(Long id);
+    Object find(Pageable pageable);
 }

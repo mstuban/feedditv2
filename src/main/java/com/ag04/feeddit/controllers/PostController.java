@@ -6,15 +6,15 @@ import com.ag04.feeddit.domain.UserRole;
 import com.ag04.feeddit.services.PostService;
 import com.ag04.feeddit.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.SortDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 
 import java.util.ArrayList;
@@ -35,9 +35,6 @@ public class PostController {
     @Autowired
     UserService userService;
 
-    private List<Long> postsToBeDeleted = new ArrayList<>();
-
-
     @RequestMapping("post/{id}")
     public String showPost(@PathVariable Long id, Model model) {
         model.addAttribute("post", postService.getPostById(id));
@@ -46,9 +43,32 @@ public class PostController {
 
     @RequestMapping("posts")
     public String showAllPosts(Model model) {
+        UserDetails userDetails =
+                (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByUsername(userDetails.getUsername());
+        Set<Long> upvotedPostsIds = user.getUpvotedPostsIds();
+        Set<Long> downvotedPostsIds = user.getDownvotedPostsIds();
+
         List<Post> allPosts = new ArrayList<>();
         postService.listAllPosts().forEach(allPosts::add);
         model.addAttribute("listOfPosts", allPosts);
+
+        List<Long> upvotesDisabled = new ArrayList<>();
+        List<Long> downvotesDisabled = new ArrayList<>();
+
+
+        for (Post post : allPosts) {
+            if (upvotedPostsIds.contains(post.getId())) {
+                upvotesDisabled.add(post.getId());
+            }
+            if (downvotedPostsIds.contains(post.getId())) {
+                downvotesDisabled.add(post.getId());
+            }
+        }
+
+        model.addAttribute("upvotesDisabled", upvotesDisabled);
+        model.addAttribute("downvotesDisabled", downvotesDisabled);
+
         return "posts";
     }
 
@@ -118,7 +138,7 @@ public class PostController {
     }
 
     @RequestMapping("/myPosts")
-    public String getMyPosts(Model model) {
+    public String getMyPosts(Model model, @RequestParam(value = "numberOfPostsDeleted", required = false) String numberOfPostsDeleted) {
         UserDetails userDetails =
                 (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByUsername(userDetails.getUsername());
@@ -137,8 +157,7 @@ public class PostController {
             checkboxList.add(post.getId());
         }
 
-        model.addAttribute("checkboxList", checkboxList);
-
+        model.addAttribute("numberOfPostsDeleted", numberOfPostsDeleted);
         model.addAttribute("userPosts", posts);
 
 
@@ -165,7 +184,7 @@ public class PostController {
         }
 
         if (upvotedPostsIds.contains(id)) {
-            return "posts";
+            return "redirect:/posts";
         } else {
             post.setNumberOfUpvotes(++postUpvotes);
             upvotedPostsIds.add(id);
@@ -183,7 +202,6 @@ public class PostController {
         List<Post> allPosts = new ArrayList<>();
         postService.listAllPosts().forEach(allPosts::add);
         model.addAttribute("listOfPosts", allPosts);
-
         return "redirect:/posts";
     }
 
@@ -206,8 +224,9 @@ public class PostController {
             downvotedPostsIds = new HashSet<>();
         }
 
+
         if (downvotedPostsIds.contains(id)) {
-            return "posts";
+            return "redirect:/posts";
         } else {
             post.setNumberOfUpvotes(--postUpvotes);
             downvotedPostsIds.add(id);
@@ -225,57 +244,42 @@ public class PostController {
         List<Post> allPosts = new ArrayList<>();
         postService.listAllPosts().forEach(allPosts::add);
         model.addAttribute("listOfPosts", allPosts);
-
         return "redirect:/posts";
     }
 
-    @RequestMapping("/post/addToIdArray/{id}")
-    public String addToIdArray(@PathVariable Long id, Model model) {
-
+    @PostMapping("/deletePosts")
+    public String deletePosts(@RequestParam(value = "postIds", required = false) List<Long> postIds, Model model, RedirectAttributes redirectAttributes) {
+        UserDetails userDetails =
+                (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByUsername(userDetails.getUsername());
+        Set<Long> upvotedPostsIds = user.getUpvotedPostsIds();
+        Set<Long> downvotedPostsIds = user.getDownvotedPostsIds();
         List<Post> allPosts = new ArrayList<>();
         postService.listAllPosts().forEach(allPosts::add);
 
-        if (allPosts.contains(postService.getPostById(id))) {
-            if (!postsToBeDeleted.contains(id)) {
-                postsToBeDeleted.add(id);
-            } else {
-                postsToBeDeleted.remove(id);
+        if (postIds != null) {
+            for (Post post : allPosts) {
+                if (postIds.contains(post.getId())) {
+                    postService.deletePost(post.getId());
+                    if (upvotedPostsIds.contains(post.getId())) {
+                        upvotedPostsIds.remove(post.getId());
+                    }
+
+                    if (downvotedPostsIds.contains(post.getId())) {
+                        downvotedPostsIds.remove(post.getId());
+                    }
+                }
             }
         }
 
-        System.out.println("POSTS TO BE DELETED : " + postsToBeDeleted);
+        user.setUpvotedPostsIds(upvotedPostsIds);
+        user.setDownvotedPostsIds(downvotedPostsIds);
+        userService.saveOrUpdate(user);
 
-        model.addAttribute("userPosts", allPosts);
+        redirectAttributes.addAttribute("numberOfPostsDeleted", postIds.size());
 
-        return "redirect:/myposts";
+        return "redirect:/myPosts";
     }
-
-    @RequestMapping("/deletePosts")
-    public String deletePosts(Model model) {
-        List<Post> allPostsBeforeDeleting = new ArrayList<>();
-        List<Post> allPostsAfterDeleting = new ArrayList<>();
-        postService.listAllPosts().forEach(allPostsBeforeDeleting::add);
-
-        for (Post post : allPostsBeforeDeleting) {
-            if (postsToBeDeleted.contains(post.getId())) {
-                postService.deletePost(post.getId());
-            }
-        }
-
-        postService.listAllPosts().forEach(allPostsAfterDeleting::add);
-        model.addAttribute("userPosts", allPostsAfterDeleting);
-
-        return "redirect:/myposts";
-    }
-
-    @RequestMapping(value = "/checkboxes/select", method = RequestMethod.POST)
-    public String actionStart(@RequestParam("command") Object command, Model model) {
-
-        System.out.println(command);
-
-        return null;
-    }
-
 
     @RequestMapping("/403")
     public String getForbiddenPage() {
