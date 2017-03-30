@@ -6,7 +6,7 @@
     <groupId>com.ag04.feeddit</groupId>
     <artifactId>feeddit</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <name>feeddit</name>
     <description>Web application for adding, rating, and deleting new posts</description>
@@ -22,7 +22,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <full-artifact-name>target/feeddit-0.0.1-SNAPSHOT.war</full-artifact-name>
     </properties>
 
     <dependencies>
@@ -86,11 +85,6 @@
             <groupId>org.jasypt</groupId>
             <artifactId>jasypt-springsecurity3</artifactId>
             <version>1.9.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-            <version>4.1.2</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
