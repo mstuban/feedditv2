@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Login Form</title>
+    <title>Login</title>
     <th:block th:include="fragments/headerincludes :: head"></th:block>
 </head>
 <body>
 <div class="container">
     <th:block th:include="fragments/header :: header"></th:block>
-    <div class="container col-md-3 col-centered">
-        <div class="card card-container">
+    <div class="row">
+        <div class="col-md-3 col-md-offset-4">
             <p id="profile-name" class="profile-name-card"></p>
 
             <span th:if="${param.error}" class="center-block text-center alert alert-danger">
@@ -42,6 +42,7 @@
             </form><!-- /form -->
         </div><!-- /card-container -->
     </div>
+</div>
 </div>
 </body>
 </html>
