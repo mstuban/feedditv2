@@ -6,9 +6,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafProperties;
 import org.springframework.context.annotation.Bean;
-import org.thymeleaf.dialect.springdata.SpringDataDialect;
+import org.springframework.web.servlet.view.ResourceBundleViewResolver;
+import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
+import org.thymeleaf.templateresolver.TemplateResolution;
+import org.thymeleaf.templateresolver.TemplateResolver;
 
 @SpringBootApplication
 public class FeedditApplication {
@@ -24,8 +28,8 @@ public class FeedditApplication {
     }
 
     @Bean
-    public ITemplateResolver defaultTemplateResolver() {
-        FileTemplateResolver resolver = new FileTemplateResolver();
+    public ITemplateResolver templateResolver() {
+        SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
         resolver.setSuffix(properties.getSuffix());
         resolver.setPrefix(templatesRoot);
         resolver.setTemplateMode(properties.getMode());
