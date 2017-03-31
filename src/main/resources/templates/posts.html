@@ -4,7 +4,7 @@
     <th:block th:include="fragments/headerincludes :: head"></th:block>
 </head>
 <body>
-<div class="container text-center">
+<div class="container-fluid text-center">
     <th:block th:include="fragments/header :: header"></th:block>
     <span th:if="${#lists.isEmpty(listOfPosts)}" class="center-block text-center alert alert-info">
         No posts added yet!
@@ -18,35 +18,39 @@
     <a th:href="@{/post/new}">
         <button id="postCreationButton" class="btn btn-primary">Create a post</button>
     </a>
-    <div class="row" th:if="${not #lists.isEmpty(listOfPosts)}">
-        <table id="table" class="display order-column">
-            <thead>
-            <tr>
-                <th class="text-center">Number of upvotes</th>
-                <th class="text-center">Headline</th>
-                <th class="text-center"></th>
-            </tr>
-            </thead>
-            <tr th:each="post, iter : ${listOfPosts}" class="text-center">
-                <td class="text-center" th:text="${post.numberOfUpvotes}"></td>
-                <td class="text-center">
-                    <a th:href="${post.postURL}"><span th:text="${post.headline}"></span></a><br/>
-                    <span th:text="${post.authorName}">
+    <hr/>
+    <div class="row-fluid" th:if="${not #lists.isEmpty(listOfPosts)}">
+        <div class="col col-md-12">
+            <table id="table" class="table" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th class="text-center">Number of upvotes</th>
+                    <th class="text-center">Headline</th>
+                    <th class="text-center"></th>
+                </tr>
+                </thead>
+                <tr th:each="post, iter : ${listOfPosts}" class="text-center">
+                    <td class="text-center" th:text="${post.numberOfUpvotes}"></td>
+                    <td class="text-center">
+                        <a th:href="${post.postURL}"><span th:text="${post.headline}"></span></a><br/>
+                        <span th:text="${post.authorName}">
                     </span>
-                </td>
-                <td class="text-center">
-                    <a id="upvoteLink" th:href="@{/post/{id}/upVote(id=${post.id})}">
-                        <button th:disabled="${not #lists.isEmpty(upvotesDisabled)} ? (${#lists.contains(upvotesDisabled, post.id)}) : (false)" onclick="upvoteAlertFunction();" th:id="${'upvoteButton' + '__${post.id}__'}"
-                                class="glyphicon glyphicon-hand-up"></button>
-                    </a>
-                    <a id="downvoteLink" th:href="@{/post/{id}/downVote(id=${post.id})}">
-                        <button th:disabled="${not #lists.isEmpty(downvotesDisabled)} ? (${#lists.contains(downvotesDisabled, post.id)}) : (false)"
-                                onclick="downvoteAlertFunction();" th:id="${'downvoteButton' + '__${post.id}__'}"
-                                class="glyphicon glyphicon-hand-down"></button>
-                    </a>
-                </td>
-            </tr>
-        </table>
+                    </td>
+                    <td class="text-center">
+                        <a id="upvoteLink" th:href="@{/post/{id}/upVote(id=${post.id})}">
+                            <button th:disabled="${not #lists.isEmpty(upvotesDisabled)} ? (${#lists.contains(upvotesDisabled, post.id)}) : (false)"
+                                    onclick="upvoteAlertFunction();" th:id="${'upvoteButton' + '__${post.id}__'}"
+                                    class="glyphicon glyphicon-hand-up"></button>
+                        </a>
+                        <a id="downvoteLink" th:href="@{/post/{id}/downVote(id=${post.id})}">
+                            <button th:disabled="${not #lists.isEmpty(downvotesDisabled)} ? (${#lists.contains(downvotesDisabled, post.id)}) : (false)"
+                                    onclick="downvoteAlertFunction();" th:id="${'downvoteButton' + '__${post.id}__'}"
+                                    class="glyphicon glyphicon-hand-down"></button>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
 </body>
