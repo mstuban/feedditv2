@@ -28,7 +28,7 @@ span#upvoteAlert, span#downvoteAlert {
     text-decoration: none;
 }
 
-table {
+#table {
     width: 100%;
     border-bottom: 0;
 }
