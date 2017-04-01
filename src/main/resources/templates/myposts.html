@@ -1,6 +1,7 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head lang="en">
-    <title>My posts</title>
+    <title sec:authorize="hasRole('ROLE_USER')">My posts</title>
+    <title sec:authorize="hasRole('ROLE_ADMIN')">All posts</title>
     <th:block th:include="fragments/headerincludes :: head"></th:block>
 </head>
 <body>
