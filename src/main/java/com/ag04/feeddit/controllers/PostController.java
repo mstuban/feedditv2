@@ -8,6 +8,7 @@ import com.ag04.feeddit.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,13 +36,8 @@ public class PostController {
     @Autowired
     UserService userService;
 
-    @RequestMapping("post/{id}")
-    public String showPost(@PathVariable Long id, Model model) {
-        model.addAttribute("post", postService.getPostById(id));
-        return "postshow";
-    }
-
     @RequestMapping("posts")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public String showAllPosts(Model model) {
         UserDetails userDetails =
                 (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -74,6 +70,7 @@ public class PostController {
 
 
     @RequestMapping("post/edit/{id}")
+    @Secured({"ROLE_ADMIN"})
     public String edit(@PathVariable Long id, Model model) {
         model.addAttribute("post", postService.getPostById(id));
         return "post";
@@ -81,6 +78,7 @@ public class PostController {
 
 
     @RequestMapping("post/new")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public String newPost(Model model) {
         UserDetails userDetails =
                 (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -109,35 +107,9 @@ public class PostController {
         return "redirect:/posts";
     }
 
-    @RequestMapping("/post/delete/{id}")
-    public String deletePost(@PathVariable Long id) {
-        UserDetails userDetails =
-                (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userService.findByUsername(userDetails.getUsername());
-        Set<Long> upvotedPostsIds = user.getUpvotedPostsIds();
-        Set<Long> downvotedPostsIds = user.getDownvotedPostsIds();
-
-        if (upvotedPostsIds == null) {
-            upvotedPostsIds = new HashSet<>();
-        }
-
-        if (downvotedPostsIds == null) {
-            downvotedPostsIds = new HashSet<>();
-        }
-
-        if (upvotedPostsIds.contains(id)) {
-            upvotedPostsIds.remove(id);
-        }
-
-        if (downvotedPostsIds.contains(id)) {
-            downvotedPostsIds.remove(id);
-        }
-
-        postService.deletePost(id);
-        return "redirect:/posts";
-    }
 
     @RequestMapping("/myPosts")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public String getMyPosts(Model model, @RequestParam(value = "numberOfPostsDeleted", required = false) String numberOfPostsDeleted) {
         UserDetails userDetails =
                 (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -165,6 +137,7 @@ public class PostController {
     }
 
     @RequestMapping("/post/{id}/upVote")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public String upvotePost(@PathVariable Long id, Model model) {
         UserDetails userDetails =
                 (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -206,6 +179,7 @@ public class PostController {
     }
 
     @RequestMapping("/post/{id}/downVote")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public String downvotePost(@PathVariable Long id, Model model) {
         UserDetails userDetails =
                 (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -248,6 +222,7 @@ public class PostController {
     }
 
     @PostMapping("/deletePosts")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public String deletePosts(@RequestParam(value = "postIds", required = false) List<Long> postIds, Model model, RedirectAttributes redirectAttributes) {
         UserDetails userDetails =
                 (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
