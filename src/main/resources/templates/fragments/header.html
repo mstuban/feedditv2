@@ -26,12 +26,9 @@
                             <span class="glyphicon glyphicon-chevron-down"></span>
                         </a>
                         <ul class="dropdown-menu text-center">
-                            <li class="text-center">
-                                <a th:href="@{/myPosts}">My posts</a>
-                            </li>
-                            <li>
-                                <form th:action="@{/logout}" method="POST">
-                                    <input type="submit" class="btn btn-danger center-block" value="Logout" />
+                            <li class="center-block">
+                                <form id="logoutform" th:action="@{/logout}" method="POST">
+                                    <input type="submit" class="btn btn-danger center-block align-middle" value="Logout" />
                                 </form>
                             </li>
                         </ul>

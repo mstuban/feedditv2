@@ -32,3 +32,13 @@ span#upvoteAlert, span#downvoteAlert {
     width: 100%;
     border-bottom: 0;
 }
+
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}
+
+#logoutform{
+    display: inline;
+}
