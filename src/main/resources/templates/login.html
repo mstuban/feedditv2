@@ -10,17 +10,13 @@
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
             <p id="profile-name" class="profile-name-card"></p>
-
+            <h1 class="text-center">Login</h1>
             <span th:if="${param.error}" class="center-block text-center alert alert-danger">
                 Invalid username or password.
             </span>
-              
             <span th:if="${param.logout}" class="center-block text-center alert alert-success">
                 You have been logged out.
             </span>
-
-            <h1 class="text-center">Login</h1>
-
             <form th:action="@{/login}" method="post"> 
                 <div class="form-group">
                     <label for="username">Username:</label>
@@ -34,7 +30,7 @@
                               placeholder="Password" required="required"/> 
                 </div>
                 <div class="form-group">
-                    <input type="checkbox" name="_spring_security_remember_me"  id="remember_me">
+                    <input type="checkbox" name="_spring_security_remember_me" id="remember_me">
                     <label for="remember_me">Remember me</label>
                 </div>
                   

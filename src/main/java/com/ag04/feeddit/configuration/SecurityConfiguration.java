@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableGlobalAuthentication
 @ComponentScan(basePackageClasses = CustomUserDetailsService.class)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -32,7 +32,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/", "/post", "/posts", "/myPosts").authenticated().and().formLogin().loginPage("/login").usernameParameter("username").passwordParameter("password").successForwardUrl("/posts").and().logout().logoutSuccessUrl("/login?logout").and().exceptionHandling().accessDeniedPage("/403").and().csrf().and().rememberMe().tokenValiditySeconds(1209600);
+        http.authorizeRequests()
+                .antMatchers("/", "/post", "/posts", "/myPosts")
+                .authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .successForwardUrl("/posts")
+                .and()
+                .logout()
+                .logoutSuccessUrl("/login?logout")
+                .and()
+                .exceptionHandling()
+                .and()
+                .csrf()
+                .and().rememberMe().tokenValiditySeconds(1209600);
     }
 
     @Bean(name = "passwordEncoder")

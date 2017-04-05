@@ -44,14 +44,12 @@ public class PostController {
         User user = userService.findByUsername(userDetails.getUsername());
         Set<Long> upvotedPostsIds = user.getUpvotedPostsIds();
         Set<Long> downvotedPostsIds = user.getDownvotedPostsIds();
-
         List<Post> allPosts = new ArrayList<>();
-        postService.listAllPosts().forEach(allPosts::add);
-        model.addAttribute("listOfPosts", allPosts);
-
         List<Long> upvotesDisabled = new ArrayList<>();
         List<Long> downvotesDisabled = new ArrayList<>();
 
+        postService.listAllPosts().forEach(allPosts::add);
+        model.addAttribute("listOfPosts", allPosts);
 
         for (Post post : allPosts) {
             if (upvotedPostsIds.contains(post.getId())) {
@@ -70,7 +68,7 @@ public class PostController {
 
 
     @RequestMapping("post/edit/{id}")
-    @Secured({"ROLE_ADMIN"})
+    @Secured("ROLE_ADMIN")
     public String edit(@PathVariable Long id, Model model) {
         model.addAttribute("post", postService.getPostById(id));
         return "post";
@@ -118,20 +116,16 @@ public class PostController {
         List<UserRole> userRoles = new ArrayList<>();
         userRoles.addAll(user.getRoles());
 
-        if (userRoles.get(0).getRole().equals("ROLE_ADMIN")) {
-            postService.listAllPosts().forEach(posts::add);
-        } else {
-            posts.addAll(user.getPosts());
-        }
-
-        List<Long> checkboxList = new ArrayList<>();
-        for (Post post : posts) {
-            checkboxList.add(post.getId());
+        for (UserRole userRole : userRoles) {
+            if (userRole.getRole().equals("ROLE_ADMIN")) {
+                postService.listAllPosts().forEach(posts::add);
+            } else {
+                posts.addAll(user.getPosts());
+            }
         }
 
         model.addAttribute("numberOfPostsDeleted", numberOfPostsDeleted);
         model.addAttribute("userPosts", posts);
-
 
         return "myposts";
     }
@@ -145,8 +139,8 @@ public class PostController {
         Set<Long> upvotedPostsIds = user.getUpvotedPostsIds();
         Set<Long> downvotedPostsIds = user.getDownvotedPostsIds();
         Post post = postService.getPostById(id);
-
         Integer postUpvotes = post.getNumberOfUpvotes();
+        List<Post> allPosts = new ArrayList<>();
 
         if (upvotedPostsIds == null) {
             upvotedPostsIds = new HashSet<>();
@@ -170,10 +164,11 @@ public class PostController {
             }
             user.setDownvotedPostsIds(downvotedPostsIds);
         }
+
         postService.savePost(post);
         userService.saveOrUpdate(user);
-        List<Post> allPosts = new ArrayList<>();
         postService.listAllPosts().forEach(allPosts::add);
+
         model.addAttribute("listOfPosts", allPosts);
         return "redirect:/posts";
     }
@@ -187,8 +182,8 @@ public class PostController {
         Set<Long> upvotedPostsIds = user.getUpvotedPostsIds();
         Set<Long> downvotedPostsIds = user.getDownvotedPostsIds();
         Post post = postService.getPostById(id);
-
         Integer postUpvotes = post.getNumberOfUpvotes();
+        List<Post> allPosts = new ArrayList<>();
 
         if (upvotedPostsIds == null) {
             upvotedPostsIds = new HashSet<>();
@@ -215,7 +210,6 @@ public class PostController {
         }
         postService.savePost(post);
         userService.saveOrUpdate(user);
-        List<Post> allPosts = new ArrayList<>();
         postService.listAllPosts().forEach(allPosts::add);
         model.addAttribute("listOfPosts", allPosts);
         return "redirect:/posts";
@@ -239,7 +233,6 @@ public class PostController {
                     if (upvotedPostsIds.contains(post.getId())) {
                         upvotedPostsIds.remove(post.getId());
                     }
-
                     if (downvotedPostsIds.contains(post.getId())) {
                         downvotedPostsIds.remove(post.getId());
                     }
@@ -255,10 +248,4 @@ public class PostController {
 
         return "redirect:/myPosts";
     }
-
-    @RequestMapping("/403")
-    public String getForbiddenPage() {
-        return "403";
-    }
-
 }

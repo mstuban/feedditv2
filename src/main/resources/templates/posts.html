@@ -38,12 +38,12 @@
                     </td>
                     <td class="text-center">
                         <a id="upvoteLink" th:href="@{/post/{id}/upVote(id=${post.id})}">
-                            <button th:disabled="${not #lists.isEmpty(upvotesDisabled)} ? (${#lists.contains(upvotesDisabled, post.id)}) : (false)"
+                            <button th:disabled="${#lists.contains(upvotesDisabled, post.id)}"
                                     onclick="upvoteAlertFunction();" th:id="${'upvoteButton' + '__${post.id}__'}"
                                     class="glyphicon glyphicon-hand-up"></button>
                         </a>
                         <a id="downvoteLink" th:href="@{/post/{id}/downVote(id=${post.id})}">
-                            <button th:disabled="${not #lists.isEmpty(downvotesDisabled)} ? (${#lists.contains(downvotesDisabled, post.id)}) : (false)"
+                            <button th:disabled="${#lists.contains(downvotesDisabled, post.id)}"
                                     onclick="downvoteAlertFunction();" th:id="${'downvoteButton' + '__${post.id}__'}"
                                     class="glyphicon glyphicon-hand-down"></button>
                         </a>
